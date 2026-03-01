@@ -30,6 +30,8 @@ examples:
 
 `x/gx $rbp-32` to print a local variable stored there
 
+`x/1gx 0x40bb90` to print 8 bytes directly from memory directly
+
 ---
 
 `stepi <n>` or `si` step entering calls or `<n>` instructions
@@ -61,4 +63,24 @@ continue
 
 ```
 
+## Comparing Memory regions manually
+
+Say `r12` and `r13` have some 4000 bytes you want to compare in live debugging. When you get to the point where `r12` and `r13` both are holding the correct data, type the following in the gdb terminal
+
+```gdb
+dump binary memory r12.bin $r12 $r12+4000
+dump binary memory r13.bin $r13 $r13+4000
+```
+
+Then, to see bytes line by line in the shell
+
+```bash
+diff -y <(hexdump -C r12.bin) <(hexdump -C r13.bin)
+```
+
+or to show only different lines
+
+```bash
+diff --side-by-side --suppress-common-lines <(hexdump -C r12.bin) <(hexdump -C r13.bin)
+```
 
